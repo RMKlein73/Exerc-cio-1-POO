@@ -1,86 +1,55 @@
-import Aluno from "@/components/Aluno";
-import Cachorro from "@/components/Cachorro";
-import CalculadoraMultiplicacao from "@/components/CalculadoraMultiplicacao";
-import FormAluno from "@/components/FormAluno";
-import Funcionario from "@/components/Funcionario";
-import Gato from "@/components/Gato";
-import Multiplicacao from "@/components/Multiplicacao";
-import Pessoa from "@/components/Pessoa";
-import { useState } from "react";
-import { Alert, Image, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 
-export default function Index() {
-  const [ativado, setAtivado] = useState(false);
-  const [campo, setCampo] = useState('');
+import React from 'react';
+import { View, Text, FlatList } from 'react-native';
 
-  const acionarPopUp = () => {
-    Alert.alert("Hello World")
-  }
+type Aluno = {
+  nome: string;
+  idade: number;
+  turma: string;
+  nota1: number;
+  nota2: number;
+};
 
+const lista: Aluno[] = [
+  { nome: 'Ana', idade: 10, turma: '22', nota1: 10, nota2: 8 },
+  { nome: 'Carlos', idade: 11, turma: '22', nota1: 7, nota2: 6 },
+  { nome: 'Cláudio', idade: 10, turma: '23', nota1: 7.5, nota2: 9 },
+  { nome: 'Renato', idade: 11, turma: '23', nota1: 6, nota2: 5 }
+];
+
+export default function App() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Switch
-        value={ativado}
-        onValueChange={(valor) => { setAtivado(valor) }}
+    <View style={{ padding: 20 }}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+        Lista de Alunos
+      </Text>
+
+      <FlatList
+        data={lista}
+        keyExtractor={(item) => item.nome}
+        renderItem={({ item }) => {
+          const media = (item.nota1 + item.nota2) / 2;
+
+          return (
+            <View style={{
+              padding: 15,
+              margin: 10,
+              backgroundColor: '#ddd',
+              borderRadius: 10
+            }}>
+              <Text>Nome: {item.nome}</Text>
+              <Text>Idade: {item.idade}</Text>
+              <Text>Turma: {item.turma}</Text>
+              <Text>Nota 1: {item.nota1}</Text>
+              <Text>Nota 2: {item.nota2}</Text>
+              <Text>Média: {media.toFixed(1)}</Text>
+              <Text>
+                Status: {media >= 7 ? 'Aprovado' : 'Reprovado'}
+              </Text>
+            </View>
+          );
+        }}
       />
-
-      <Pressable onPress={acionarPopUp}>
-        <Text>Boa noite.</Text>
-      </Pressable>
-
-      <Pressable onPress={(evento) => {
-        Alert.alert(`Campo: ${campo}`)
-        console.log(evento)
-      }}>
-        <Text>Boa noite.</Text>
-      </Pressable>
-
-      <Gato />
-      <Cachorro nome="Caramelo" raca="pitbul" />
-
-      <Funcionario 
-        nome="Rafael Klein" 
-        idade={16} 
-        setor="Tecnologia da Informacao" 
-      />
-
-      <Aluno 
-        nome="Rafael Klein" 
-        idade={16} 
-        turma="2 Ano A" 
-        nota1={8.5} 
-        nota2={9.5} 
-      />
-
-      <Multiplicacao 
-        valor1={2} 
-        valor2={4} 
-        valor3={5} 
-      />
-
-      {/* Chamadas dos novos componentes */}
-      <Pessoa />
-      <FormAluno />
-      <CalculadoraMultiplicacao />
-
-      <TextInput 
-        placeholder="Digite algo..."
-        value={campo}
-        onChangeText={(text) => { setCampo(text) }}
-      />
-      <Image 
-        source={{ uri: ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIcWbwWYOcI6vA-lYYg7v9VzBnzzldIkR57H67e5CbHDBU5UXz4Ft0EmA&s=10") }} 
-        style={{ width: 200, height: 200 }}
-      />
-    </ScrollView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 20,
-  },
-});
